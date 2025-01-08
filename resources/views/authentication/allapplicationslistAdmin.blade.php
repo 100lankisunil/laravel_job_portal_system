@@ -17,28 +17,28 @@
                         <th>Status</th>
                     </tr>
                 </thead>
-                <tbody>
+                {{-- <tbody>
                     @foreach ($applications as $row )
                     <tr>
                         <td>{{ $row->applicationId }}</td>
-                        <td>
-                            <p class="mb-0">{{ $row->title }}</p>
-                        </td>
-                        <td>
-                            {{ $row->posted_by }}
-                        </td>
-                        <td>
-                            {{ $row->name }}
-                        </td>
-                        <td>
-                            {{ $row->formatted_date }}
-                        </td>
-                        <td>
-                            {{ $row->status }}
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
+                <td>
+                    <p class="mb-0">{{ $row->title }}</p>
+                </td>
+                <td>
+                    {{ $row->posted_by }}
+                </td>
+                <td>
+                    {{ $row->name }}
+                </td>
+                <td>
+                    {{ $row->formatted_date }}
+                </td>
+                <td>
+                    {{ $row->status }}
+                </td>
+                </tr>
+                @endforeach
+                </tbody> --}}
             </table>
         </div>
         <!-- end table-responsive -->
@@ -59,7 +59,38 @@
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('#example').DataTable();
+        $('#example').DataTable({
+            serverSide: true
+            , processing: true
+            , ajax: {
+                url: '{{ route("all_applications_admin_list") }}'
+            , }
+            , columns: [{
+                    data: 'applicationId'
+                    , name: 'applications.id'
+                }
+                , {
+                    data: 'title'
+                    , name: 'jobs.title'
+                }
+                , {
+                    data: 'posted_by'
+                    , name: 'jobs.posted_by'
+                }
+                , {
+                    data: 'name'
+                    , name: 'users.name'
+                }
+                , {
+                    data: 'formatted_date'
+                    , name: 'jobs.created_at'
+                }
+                , {
+                    data: 'status'
+                    , name: 'applications.status'
+                }
+            , ]
+        , });
     });
 
 </script>

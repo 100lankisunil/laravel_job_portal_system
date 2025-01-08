@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Job;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
 
 class AdminController extends Controller
 {
@@ -143,26 +144,27 @@ class AdminController extends Controller
         ]);
     }
 
-    public function allApplicationsList()
+    public function allApplicationsList(Request $request)
     {
-        $allapplications = DB::table("applications")
-            ->Join('jobs', "applications.job_id", '=', "jobs.id")
-            ->Join("users",  "applications.user_id", '=', "users.id")
-            ->join("users as posters", "jobs.posted_by", '=', "posters.id")
-            ->select(
-                'jobs.title',
-                'applications.status',
-                'users.name',
-                'posters.name as posted_by',
-                "applications.id as applicationId",
-                DB::raw("DATE_FORMAT(jobs.created_at, '%d-%m-%y') as formatted_date")
-            )
-            ->get();
+        if ($request->ajax()) {
+            $allapplications = DB::table("applications")
+                ->Join('jobs', "applications.job_id", '=', "jobs.id")
+                ->Join("users",  "applications.user_id", '=', "users.id")
+                ->join("users as posters", "jobs.posted_by", '=', "posters.id")
+                ->select(
+                    'jobs.title',
+                    'applications.status',
+                    'users.name',
+                    'posters.name as posted_by',
+                    "applications.id as applicationId",
+                    DB::raw("DATE_FORMAT(jobs.created_at, '%d-%m-%y') as formatted_date")
+                );
+
+            return DataTables::query($allapplications)->make(true);
+        }
         // echo "<pre>";
         // print_r($allapplications);
         // die;
-        return view("authentication.allapplicationslistAdmin", [
-            "applications" => $allapplications
-        ]);
+        return view("authentication.allapplicationslistAdmin");
     }
 }
