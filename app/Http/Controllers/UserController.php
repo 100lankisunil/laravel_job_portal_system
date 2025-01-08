@@ -10,17 +10,45 @@ class UserController extends Controller
 {
     public function findJobs()
     {
-        $allJobs = DB::table("jobs")
-            ->join("users", "users.id", "=", "jobs.posted_by")
+        // $allJobs = DB::table("jobs")
+        //     ->join("users", "users.id", "=", "jobs.posted_by")
+        //     ->select(
+        //         'jobs.*',
+        //         'users.name as posted_by',
+        //         DB::raw("DATE_FORMAT(jobs.created_at, '%d-%m-%y') as formatted_date")
+        //     )
+        //     ->get();
+
+        $totaljobs = DB::table("jobs")->count();
+
+        $allJobs = DB::table('jobs')
+            ->leftJoin('users', 'users.id', '=', 'jobs.posted_by')
+            ->leftJoin('applications', 'applications.job_id', '=', 'jobs.id')
             ->select(
-                'jobs.*',
+                'jobs.id',
+                'jobs.title',
+                'jobs.location', // Add location if it's a column
+                'jobs.salary_range', // Add salary range if it's a column
                 'users.name as posted_by',
-                DB::raw("DATE_FORMAT(jobs.created_at, '%d-%m-%y') as formatted_date")
+                DB::raw("DATE_FORMAT(jobs.created_at, '%d-%m-%y') as formatted_date"),
+                DB::raw("COUNT(applications.id) as application_count")
+            )
+            ->groupBy(
+                'jobs.id',
+                'jobs.title',
+                'jobs.location',
+                'jobs.salary_range',
+                'users.name',
+                'jobs.created_at',
+                'applications.job_id'
             )
             ->get();
-        $totaljobs = DB::table("jobs")->count();
-        // print_r($dateofpostjobs);
+
+
+        // echo "<pre>";
+        // print_r($allJobs);
         // die;
+
         return view('jobseeker.findjobs', [
             "jobs" => $allJobs,
             "totaljobs" => $totaljobs,

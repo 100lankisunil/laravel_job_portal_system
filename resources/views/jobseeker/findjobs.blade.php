@@ -278,27 +278,16 @@
                                     <div class="col-lg-12">
                                         <div class="count-job mb-35">
                                             <span>{{ $totaljobs }} Jobs found</span>
-                                            <!-- Select job items start -->
-                                            {{-- <div class="select-job-items">
-                                                <span>Sort by</span>
-                                                <select name="select">
-                                                    <option value="">None</option>
-                                                    <option value="">job list</option>
-                                                    <option value="">job list</option>
-                                                    <option value="">job list</option>
-                                                </select>
-                                            </div> --}}
-                                            <!--  Select job items End-->
                                         </div>
                                     </div>
                                 </div>
                                 <!-- Count of Job list End -->
                                 <!-- single-job-content -->
-                                @foreach ($jobs as $row )
+                                @foreach ($jobs as $row)
                                 <div class="single-job-items mb-30">
                                     <div class="job-items">
                                         {{-- <div class="company-img">
-                                            <a href="#"><img src="{{ asset('jobassets/img/icon/job-list1.png') }}" alt=""></a>
+                                        <a href="#"><img src="{{ asset('jobassets/img/icon/job-list1.png') }}" alt=""></a>
                                     </div> --}}
                                     <div class="job-tittle job-tittle2">
                                         <h4>{{ $row->title }}</h4>
@@ -312,9 +301,12 @@
                                 <div class="items-link items-link2 f-right">
                                     <a href="{{ route('viewjob', ['id' => $row->id]) }}">View</a>
                                     <span>Posted - {{ $row->formatted_date }}</span>
+                                    <!-- Display the application count -->
+                                    <span>Total Applied: {{ $row->application_count }}</span>
                                 </div>
                             </div>
                             @endforeach
+
                     </div>
                     </section>
                     <!-- Featured_job_end -->
